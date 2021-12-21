@@ -2,72 +2,38 @@
 
 int main()
 {
-    // 1. Создать и инициализировать переменные пройденных типов данных(short int, int, long long, char, bool, float, double).
+    //  1. Написать программу, вычисляющую выражение a* (b + (c / d)) и выводящую результат с плавающей точкой, где a, b, c, d – целочисленные константы.
+    //  Используйте static_cast или С - Style cast к float чтобы выполнить точное деление.
+    //  4. Написать программу, вычисляющую выражение из первого задания, а переменные для неё объявлены и инициализировать в другом cpp файле. Используйте extern.
     {
-        short int grade = 5;
-        int x = - 1'000'000;
-        unsigned int income = 1'000'000;
-        long long capitalization = 1'000'000'000'000;
-        char plusSymbol = '+';
-        bool isEmpty = true;
-        float distance = 5.2f;
-        double angle = 17.234;
+        extern const int a, b, c ,d;
+        std::cout << "a * (b + (c / d)): " << a * (b + (static_cast<float>(c) / d)) << "\n";
     } 
-
-    // 2. Создать перечисление (enum) с возможными вариантами символов для игры в крестики-нолики.
-
-    enum class TicTacToeSymbol {
-        EMPTY,
-        CROSS,
-        ZERO
-    };
-
-    // 3. Создать массив (поле для игры в крестики нолики), способный содержать значения такого перечисления и инициализировать его.
-
-    TicTacToeSymbol ticTacToeField[3][3]{
-        {TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY} ,
-        {TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY},
-        {TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY, TicTacToeSymbol::EMPTY}
-    };
-
-    // 4. Создать структуру (struct) данных «Поле для игры в крестики-нолики» и снабдить его всеми необходимыми свойствами (подумайте что может понадобиться).
-
-    struct Player {
-        int id;
-        char name[10];
-        char ipAddress[50];
-        TicTacToeSymbol symbol;
-    };
-
-    struct TicTacToeGame {
-        TicTacToeSymbol field[3][3];
-        int turnNumber;
-        bool isFinished;
-        bool isStarted;
-        Player players[2];
-        int winnerId;
-    };
-
-    // 5. Создать структуру (struct MyVariant) объединяющую: union MyData (int, float, char) и 3-и битовых поля (флага) указывающими какого типа значение в данный
-    // момент содержится в объединении (isInt, isFloat, isChar). Продемонстрировать пример использования в коде этой структуры.
-    
-    union MyData {
-        int i;
-        float f;
-        char c;
-    };
-
-    struct MyVariant
+    //   2. Дано целое число.Если оно меньше или равно 21, то выведите на экран разницу между этим числом и числом 21. Если же заданное число больше, чем 21,
+    //необходимо вывести удвоенную разницу между этим числом и 21. При выполнении задания следует использовать тернарный оператор(? : ).
     {
-        MyData data;
-        int isInt : 1;
-        int isFloat : 1;
-        int isChar : 1;
-    };
+        std::cout << "Enter an integer:\n";
+        int n = 0;
+        std::cin >> n;
+        int answer = (n > 21) ? 2 * (n - 21) : (21 - n);
+        std::cout << answer << '\n';
+    }
+    // 3. Описать трёхмерный целочисленный массив, размером 3х3х3 и указатель на значения внутри массива и при помощи операции разыменования вывести на экран
+    // значение центральной ячейки получившегося куба [1][1][1].
+    {
+        int arr[3][3][3]{
+            0, 0, 0 ,
+            0, 0, 0 ,
+            0, 0, 0 ,
+            0, 0, 0 ,
+            0, 8, 0 ,
+            0, 0, 0 ,
+            0, 0, 0 ,
+            0, 0, 0 ,
+            0, 0, 0 ,
+        };
+        int* ptr = &arr[0][0][0];
+        std::cout << *(ptr+13) << " \n";
 
-    MyVariant test;
-    test.data.i = 5;
-    test.isInt = 1;
-    test.isFloat = 0;
-    test.isChar = 0;
+    }
 }
