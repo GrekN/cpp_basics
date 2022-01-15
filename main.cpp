@@ -1,167 +1,102 @@
 #include <iostream>
-#include <clocale>
-#include <cmath>
-#include <cstdlib>
-#include <ctime>
-#include <string>
 #include <fstream>
-
-void fillArrayWithPowerOfTwo(int* arr, const size_t size) {
-    for (size_t i = 0; i < size; i++)
-    {
-        arr[i] = std::pow(2,i);
-    }
-}
-
-void fillMatrixWithRandomNumbers(int** arr, const size_t size) {
-    srand(static_cast<unsigned int>(time(0)));
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            arr[i][j] = std::rand() % 100;
-        }
-    }
-}
-
-void printArray(const int* arr, const size_t size) {
-    for (size_t i = 0; i < size ; i++)
-    {
-        std::cout << arr[i] << ' ';
-    }
-    std::cout << '\n';
-}
-
-void printMatrix(int** arr, const size_t size) {
-    for (size_t i = 0; i < size; i++)
-    {
-        for (size_t j = 0; j < size; j++)
-        {
-            std::cout << arr[i][j] << ' ';
-        }
-        std::cout << '\n';
-    }
-}
+#include <clocale>
+#include "mylib.h"
 
 int main()
 {
     setlocale(LC_ALL, "Russian");
 
-    // 1. Выделить в памяти динамический одномерный массив типа int. Размер массива запросить у пользователя. Инициализировать его числами
-    // степенями двойки: 1, 2, 4, 8, 16, 32, 64, 128 ... Вывести массив на экран. Не забыть освободить память. =) Разбить программу на функции.
+    // 1. Создайте проект из 2х cpp файлов и заголовочного (main.cpp, mylib.cpp, mylib.h) во втором модуле mylib объявить 3 функции: 
+    // для инициализации массива (типа float), печати его на экран и подсчета количества отрицательных и положительных элементов. 
+    // Вызывайте эти 3-и функции из main для работы с массивом.
+    // 5.* Сделайте задание 1 добавив свой неймспейс во втором модуле (первое задание тогда можно не делать).
     {
-        std::cout << "Введите размер массива:\n";
-        size_t n;
+        const size_t size = 10;
+        float arr[size];
+        mylib::initArray(arr, size);
+        mylib::printFloatArray(arr, size);
+        mylib::countPositiveAndNegativeNumbers(arr, size);
+    }
+
+    // 2. Описать макрокоманду (через директиву define), проверяющую, входит ли переданное ей число (введенное с клавиатуры)
+    // в диапазон от нуля (включительно) до переданного ей второго аргумента (исключительно) и возвращает true или false,
+    // вывести на экран «true» или «false».
+    {
+        #define IS_POSITIVE_AND_LOWER_THAN(x,y) (x >= 0 && x < y) ? true : false; 
+       
+        std::cout << "Введите число:\n";
+        int n;
         std::cin >> n;
-        int* pArr = new int[n];
+        bool isTruthy = IS_POSITIVE_AND_LOWER_THAN(n, 10);
 
-        fillArrayWithPowerOfTwo(pArr, n);
-
-        std::cout << "Массив степеней двоек:\n";
-        printArray(pArr, n);
-
-        delete[] pArr;
+        if (isTruthy) {
+            std::cout << "true";
+        } else {
+            std::cout << "false";
+        }
+        std::cout << '\n';
     }
 
-    // 2. Динамически выделить матрицу 4х4 типа int. Инициализировать ее псевдослучайными числами через функцию rand. Вывести на экран.
-    // Разбейте вашу программу на функции которые вызываются из main.
+    // 3. Задайте массив типа int. Пусть его размер задается через директиву препроцессора #define. Инициализируйте его через ввод с клавиатуры.
+    // Напишите для него свою функцию сортировки (например Пузырьком). Реализуйте перестановку элементов как макрокоманду SwapINT(a, b). 
+    // Вызывайте ее из цикла сортировки.
     {
-        const size_t size = 4;
-
-        int** pMatrix = new int*[size];
-        for (size_t i = 0; i < size; i++)
+        #define ARRSIZE 5
+        int arr[ARRSIZE];
+        for (size_t i = 0; i < ARRSIZE; i++)
         {
-            pMatrix[i] = new int[size];
+            std::cout << "Введите " << i << " элемент массива\n";
+            std::cin >> arr[i];
         }
 
-        fillMatrixWithRandomNumbers(pMatrix, size);
-        std::cout << "Матрица случайных чисел:\n";
-        printMatrix(pMatrix, size);
-
-        for (size_t i = 0; i < size; i++)
+        #define SwapINT(a,b) int temp = a; a = b; b = temp;
+        bool isSorted = true;
+        for (size_t i = 0; i < ARRSIZE - 1; i++)
         {
-            delete[] pMatrix[i];
-        }
-        delete[] pMatrix;
-    }
-
-    // 3. Написать программу, которая создаст два текстовых файла (*.txt), примерно по 50-100 символов в каждом
-    // (особого значения не имеет с каким именно содержимым). Имена файлов запросить у польлзователя.
-
-    {
-        std::cout << "Введите имя файла 1:\n";
-        std::string fileName1;
-        std::cin >> fileName1;
-        std::ofstream fout1(fileName1 + ".txt");
-        fout1 << "The class template basic_ofstream implements high-level output operations on file based streams. ";
-        fout1.close();
-
-        std::cout << "Введите имя файла 2:\n";
-        std::string fileName2;
-        std::cin >> fileName2;
-        std::ofstream fout2(fileName2 + ".txt");
-        fout2 << "It interfaces a file-based streambuffer (std::basic_filebuf) with the high-level interface of (std::basic_ostream)";
-        fout2.close();
-    }
-
-    // 4. * Написать функцию, «склеивающую» эти файлы в третий текстовый файл (имя файлов спросить у пользователя).
-    {
-        std::cout << "Введите названия файлов, которые требуется склеить:\n";
-        std::string fileName1, fileName2;
-        std::cin >> fileName1 >> fileName2;
-
-        std::string result = "";
-        std::ifstream fin1(fileName1 + ".txt");
-        while (!fin1.eof()) {
-            std::string buf;
-            std::getline(fin1, buf);
-            result += buf;
-        }
-
-        std::ifstream fin2(fileName2 + ".txt");
-        while (!fin2.eof()) {
-            std::string buf;
-            std::getline(fin2, buf);
-            result += buf;
-        }
-
-        std::cout << "Введите название итогового файла:\n";
-        std::string resultFileName;
-        std::cin >> resultFileName;
-        std::ofstream fout(resultFileName + ".txt", std::ios::app);
-        fout << result;
-    }
-
-    // 5. * Написать программу, которая проверяет присутствует ли указанное пользователем при запуске программы слово в указанном
-    //  пользователем файле (для простоты работаем только с латиницей). Используем функцию find которая есть в строках std::string 
-    {
-        std::cout << "Введите название файла:\n";
-        std::string fileName;
-        std::cin >> fileName;
-
-        std::cout << "Введите искомое слово:\n";
-        std::string word;
-        std::cin >> word;
-
-        std::ifstream fin(fileName + ".txt");
-        bool wordFound = false;
-        while (!fin.eof()) {
-            std::string buf;
-            std::getline(fin, buf);
-            if (buf.find(word) != std::string::npos) {
-                std::cout << buf;
-                wordFound = true;
+            for (size_t j = 0; j < ARRSIZE - 1 - i; j++)
+            {
+                if (arr[j] > arr[j + 1]) {
+                    isSorted = false;
+                    SwapINT(arr[j], arr[j + 1]);
+                }
+            }
+            if (isSorted) {
                 break;
             }
         }
-        if (wordFound)
-        {
-            std::cout << "Слово найдено:\n";
-        }
-        else
-        {
-            std::cout << "Слово не найдено:\n";
-        }
+        mylib::printIntArray(arr, ARRSIZE);
+    }
+
+    //  4. * Объявить структуру Сотрудник с различными полями. Сделайте для нее побайтовое выравнивание с помощью директивы pragma pack.
+    // Выделите динамически переменную этого типа. Инициализируйте ее. Выведите ее на экран и ее размер с помощью sizeof. Сохраните эту
+    // структуру в текстовый файл.
+
+    {
+        #pragma pack(push,1)
+        struct Employee {
+            char fullName[50];
+            char department[50];
+            bool isManager;
+            unsigned int age;
+            unsigned int grade;
+        };
+        #pragma pack(pop)
+
+        Employee* CTO = new Employee({"Ivanov Ivan Ivanovich", "Executives", true, 50, 10});
+        std::cout << "Full name: " << CTO->fullName << '\n';
+        std::cout << "Department: " << CTO->department << '\n';
+        std::cout << "Age: " << CTO->age << '\n';
+        std::cout << "Grade: " << CTO->grade << '\n';
+        std::cout << "Size of structure: " << sizeof(*CTO) << '\n';
     
+        std::ofstream fout("result.txt");
+        if (fout.is_open()) {
+            fout << "Full name: " << CTO->fullName << '\n';
+            fout << "Department: " << CTO->department << '\n';
+            fout << "Age: " << CTO->age << '\n';
+            fout << "Grade: " << CTO->grade << '\n';
+            fout.close();
+        }
     }
 }
