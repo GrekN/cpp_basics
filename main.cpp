@@ -72,7 +72,7 @@ void destroyGame(Game* game) {
 	delete game;
 }
 
-void printField(const Cell* const* field) { //TODO think about it
+void printField(const Cell* const* field) {
 	for (size_t i = 0; i < 3; i++)
 	{
 		for (size_t j = 0; j < 3; j++)
